@@ -21,7 +21,7 @@ class Api::MenuItemsController < ApplicationController
   end
 
   def update
-    if @item.update(item_params)
+    if @item.update(item_params)      
       render json: @item
     else 
       render json: @item.errors, status: :unprocessable_entity
@@ -38,7 +38,7 @@ class Api::MenuItemsController < ApplicationController
     end 
 
   def item_params 
-    params.require(:menu_item).permit(:name, :description, :price)
+    params.require(:item).permit(:name, :description, :price)
   end 
 
   def set_restaurant

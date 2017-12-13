@@ -10,7 +10,7 @@ class MenuForm extends Component {
     const match = this.props.match
     axios.get(`/api/menu_items/${match.params.id}`)
     .then( res => { 
-      this.setState({ items: res.data });      
+      this.setState({ item: res.data });      
     })
     .catch( err => {
       console.log(err)
@@ -18,20 +18,32 @@ class MenuForm extends Component {
   }
 
   handleSubmit = (e) => {
-  e.preventDefault();
-  let baseUrl = '/api/menu_items';
-  const { id, name, description, price } = this.state.item;
-  baseUrl = id ? `${baseUrl}/${id}` : baseUrl;
-  // strong params
-  const params = { item: { name, description, price } }
-  e.preventDefault();
-  axios.put(baseUrl, params)
-  .then(res => {
-    this.props.history.push(`/menu_items/${id}`);
-  })
-  .catch( err => {
-    console.log(err);
-});
+    e.preventDefault();
+
+    let baseUrl = '/api/menu_items';
+    const { id, name, description, price } = this.state.item;
+    baseUrl = id ? `${baseUrl}/${id}` : baseUrl;
+    // strong params
+    const params = { item: { name, description, price } }
+
+    if(id) {
+      axios.put(baseUrl, params)
+      .then(res => {
+        this.props.history.push(`/menu_items/${id}`);
+      })
+      .catch( err => {
+        console.log(err);
+    });
+    }
+    else
+      axios.post(baseUrl, params)
+        .then(res => {
+          this.setState({ item: { name: '', price: '', description: '' }});
+          this.props.addItem(res.data);
+        })
+        .catch( err => {
+          console.log(err);
+      })
   }
 
   handleChange = (e) => {
